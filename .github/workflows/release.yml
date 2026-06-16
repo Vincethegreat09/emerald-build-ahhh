@@ -17,19 +17,19 @@ jobs:
         run: |
           Expand-Archive -Path LCE-Emerald-Launcher-1.3.0.zip -DestinationPath .\extracted_build -Force
           Get-ChildItem -Path .\extracted_build\LCE-Emerald-Launcher-1.3.0\* -Exclude ".github" | Move-Item -Destination . -Force
-          # Clean up the empty folders so pnpm doesn't get confused
           Remove-Item -Path .\extracted_build -Recurse -Force
+          # Safety line: Delete rogue workspace files that cause pnpm to crash
+          if (Test-Path "pnpm-workspace.yaml") { Remove-Item "pnpm-workspace.yaml" -Force }
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
 
       - name: Node.js setup
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          # Removed the pnpm cache line to fix the error
 
       - name: Rust setup
         uses: dtolnay/rust-toolchain@stable
