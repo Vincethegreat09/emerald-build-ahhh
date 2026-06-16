@@ -45,5 +45,5 @@ jobs:
           releaseBody: 'Automated Windows build for Caty.'
           releaseDraft: true
           prerelease: false
-          # Bypasses the auto-updater signature requirement
-          args: --no-updater
+          # Uses the exact flag Tauri suggested to bypass signature errors
+          args: --no-bundle
