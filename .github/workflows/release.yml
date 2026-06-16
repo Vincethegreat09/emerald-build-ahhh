@@ -6,8 +6,6 @@ on:
 
 jobs:
   release:
-    permissions:
-      contents: write
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -35,15 +33,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build the app
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build standalone application
+        run: pnpm tauri build --no-bundle
+
+      - name: Upload Windows Standalone App
+        uses: actions/upload-artifact@v4
         with:
-          tagName: v1.3.0
-          releaseName: 'Emerald Launcher v1.3.0'
-          releaseBody: 'Automated Windows build for Caty.'
-          releaseDraft: true
-          prerelease: false
-          # Uses the exact flag Tauri suggested to bypass signature errors
-          args: --no-bundle
+          name: Emerald-Launcher-Windows
+          path: src-tauri/target/release/emerald-legacy-launcher.exe
